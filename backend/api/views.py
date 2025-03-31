@@ -1,14 +1,10 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from .models import User
+from .serializers import UserSerializer
 
-# Tymczasowa baza użytkowników (lista w pamięci)
-users = [
-    {"id": 1, "name": "Jan Kowalski", "email": "jan@example.com"},
-    {"id": 2, "name": "Anna Nowak", "email": "anna@example.com"}
-]
-
-# Tymczasowa baza sal (lista w pamięci)
+# Tymczasowa baza sal
 rooms = [
     {"id": 1, "name": "Sala 101", "capacity": 30, "equipment": "Projektor, Tablica"},
     {"id": 2, "name": "Laboratorium 202", "capacity": 20, "equipment": "Komputery, Rzutnik"}
@@ -16,36 +12,50 @@ rooms = [
 
 @api_view(['GET'])
 def user_list(request):
-    return Response(users, status=status.HTTP_200_OK)
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def user_detail(request, pk):
-    user = next((u for u in users if u["id"] == pk), None)
-    if user:
-        return Response(user, status=status.HTTP_200_OK)
-    return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+    try:
+        user = User.objects.get(pk=pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def user_create(request):
-    new_user = request.data
-    new_user["id"] = max(user["id"] for user in users) + 1 if users else 1
-    users.append(new_user)
-    return Response(new_user, status=status.HTTP_201_CREATED)
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
 def user_update(request, pk):
-    user = next((u for u in users if u["id"] == pk), None)
-    if not user:
+    try:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-    user.update(request.data)
-    return Response(user, status=status.HTTP_200_OK)
+
+    serializer = UserSerializer(user, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 def user_delete(request, pk):
-    global users
-    users = [u for u in users if u["id"] != pk]
-    return Response(status=status.HTTP_204_NO_CONTENT)
-
+    try:
+        user = User.objects.get(pk=pk)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+# ROOMS
 
 @api_view(['GET'])
 def room_list(request):
