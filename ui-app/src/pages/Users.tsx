@@ -26,6 +26,7 @@ export default function Users() {
           </li>
         ))}
       </ul>
+      <button onClick={fetchUsers}>Odśwież listę</button>
     </div>
   );
 }
