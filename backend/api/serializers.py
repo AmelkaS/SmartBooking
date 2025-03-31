@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'first_name', 'last_name', 'role']
 
-class RoomSerializer(serializer.ModelSerializer):
+class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = ['id', 'name', 'capacity', 'equipment' ]
