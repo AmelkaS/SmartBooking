@@ -77,11 +77,16 @@ def room_create(request):
 
 @api_view(['PUT'])
 def room_update(request, pk):
-    room = next((r for r in rooms if r["id"] == pk), None)
-    if not room:
+    try:
+        room = Room.objects.get(pk=pk)
+    except Room.DoesNotExist:
         return Response({"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
-    room.update(request.data)
-    return Response(room, status=status.HTTP_200_OK)
+    
+    serializer = RoomSerializer(room, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 def room_delete(request, pk):
