@@ -18,11 +18,38 @@ export default function UserForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px", maxWidth: "300px" }}>
-      <input name="first_name" placeholder="Imię" onChange={handleChange} />
-      <input name="last_name" placeholder="Nazwisko" onChange={handleChange} />
-      <input name="role" placeholder="Rola" onChange={handleChange} />
-      <button type="submit">Dodaj</button>
-    </form>
+    <>
+      <h3 style={{ textAlign: "center" }}>Dodaj użytkownika</h3>
+      <form 
+        onSubmit={handleSubmit} 
+        style={{ 
+          display: "flex", 
+          flexDirection: "column", 
+          gap: "1rem",
+          maxWidth: "400px",
+          margin: "0 auto",
+        }}
+      >
+        <input 
+          name="first_name" 
+          placeholder="Imię" 
+          onChange={handleChange} 
+          style={{ marginTop: "0.5rem", padding: "0.5rem" }}
+        />
+        <input 
+          name="last_name" 
+          placeholder="Nazwisko" 
+          onChange={handleChange} 
+          style={{ marginTop: "0.5rem", padding: "0.5rem" }}
+        />
+        <input 
+          name="role" 
+          placeholder="Rola" 
+          onChange={handleChange} 
+          style={{ marginTop: "0.5rem", padding: "0.5rem" }}
+        />
+        <button type="submit">Dodaj</button>
+      </form>
+    </>
   );
 }
