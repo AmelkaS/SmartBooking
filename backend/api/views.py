@@ -90,6 +90,9 @@ def room_update(request, pk):
 
 @api_view(['DELETE'])
 def room_delete(request, pk):
-    global rooms
-    rooms = [r for r in rooms if r["id"] != pk]
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    try:
+        room = Room.objects.get(pk=pk)
+        room.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Room.DoesNotExist:
+        return Response({"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
