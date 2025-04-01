@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function UserForm() {
@@ -11,6 +12,8 @@ export default function UserForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const navigate = useNavigate();
+ 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     await axios.post("http://localhost:8000/api/users/create/", form);
@@ -19,6 +22,11 @@ export default function UserForm() {
 
   return (
     <>
+      <div style={{ textAlign: "left", marginBottom: "1rem" }}>
+        <button onClick={() => navigate(-1)} style={{ padding: "0.5rem 1rem" }}>
+            ← Wróć
+        </button>
+      </div>
       <h3 style={{ textAlign: "center" }}>Dodaj użytkownika</h3>
       <form 
         onSubmit={handleSubmit} 

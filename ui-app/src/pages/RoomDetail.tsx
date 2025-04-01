@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface Room {
@@ -11,6 +11,7 @@ interface Room {
 
 export default function RoomDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [room, setRoom] = useState<Room | null>(null);
 
   useEffect(() => {
@@ -23,9 +24,14 @@ export default function RoomDetail() {
 
   return (
     <div>
-      <h2>{room.name}</h2>
-      <p>Pojemność: {room.capacity}</p>
-      <p>Wyposażenie: {room.equipment}</p>
+        <div style={{ textAlign: "left", marginBottom: "1rem" }}>
+            <button onClick={() => navigate(-1)} style={{ padding: "0.5rem 1rem" }}>
+                ← Wróć
+            </button>
+        </div>
+        <h2>{room.name}</h2>
+        <p>Pojemność: {room.capacity}</p>
+        <p>Wyposażenie: {room.equipment}</p>
     </div>
   );
 }

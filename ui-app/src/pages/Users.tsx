@@ -1,5 +1,6 @@
 // src/pages/Users.tsx
 import React, { useEffect, useState } from "react";
+import {useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Users() {
@@ -14,6 +15,8 @@ export default function Users() {
     setUsers(res.data);
   };
 
+    const navigate = useNavigate();
+  
   const deleteUser = async (id: number) => {
     try {
       await axios.delete(`http://localhost:8000/api/users/${id}/delete/`);
@@ -25,6 +28,11 @@ export default function Users() {
 
   return (
     <div>
+      <div style={{ textAlign: "left", marginBottom: "1rem" }}>
+        <button onClick={() => navigate(-1)} style={{ padding: "0.5rem 1rem" }}>
+            ← Wróć
+        </button>
+      </div>
       <h2>Lista użytkowników</h2>
       <ul>
         {users.map((user: any) => (
