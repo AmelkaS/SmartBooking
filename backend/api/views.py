@@ -60,10 +60,12 @@ def room_list(request):
 
 @api_view(['GET'])
 def room_detail(request, pk):
-    room = next((r for r in rooms if r["id"] == pk), None)
-    if room:
-        return Response(room, status=status.HTTP_200_OK)
-    return Response({"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
+    try:
+        room = Room.objects.get(pk=pk)
+    except Room.DoesNotExist:
+        return Response({"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
+    serializer = RoomSerializer(room)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def room_create(request):
