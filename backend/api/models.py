@@ -32,3 +32,9 @@ class Reservation(models.Model):
     def __str__(self):
         return f"{self.user} → {self.room} ({self.start_time} - {self.end_time})"
 
+class RoomEquipment(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('room', 'equipment')
