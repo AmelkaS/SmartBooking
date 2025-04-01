@@ -1,14 +1,9 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Room
+from .serializers import UserSerializer, RoomSerializer
 
-# Tymczasowa baza sal
-rooms = [
-    {"id": 1, "name": "Sala 101", "capacity": 30, "equipment": "Projektor, Tablica"},
-    {"id": 2, "name": "Laboratorium 202", "capacity": 20, "equipment": "Komputery, Rzutnik"}
-]
 
 @api_view(['GET'])
 def user_list(request):
@@ -59,7 +54,9 @@ def user_delete(request, pk):
 
 @api_view(['GET'])
 def room_list(request):
-    return Response(rooms, status=status.HTTP_200_OK)
+    rooms = Room.objects.all()
+    serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def room_detail(request, pk):
