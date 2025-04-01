@@ -20,6 +20,15 @@ export default function Rooms() {
     setRooms(res.data);
   };
 
+  const deleteRoom = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/rooms/${id}/delete/`);
+      fetchRooms(); // odświeżanie listy
+    } catch (err) {
+      console.error("Błąd usuwania sali:", err);
+    }
+  };
+
   return (
     <div>
       <h2>Lista sal</h2>
@@ -29,6 +38,9 @@ export default function Rooms() {
             <a href={`/rooms/${room.id}`}>
               {room.name} – {room.capacity} miejsc, {room.equipment}
             </a>
+            <button onClick={() => deleteRoom(room.id)} style={{ marginLeft: "1rem" }}>
+              Usuń
+            </button>
           </li>
         ))}
       </ul>
