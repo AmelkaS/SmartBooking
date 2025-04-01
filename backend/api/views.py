@@ -69,10 +69,11 @@ def room_detail(request, pk):
 
 @api_view(['POST'])
 def room_create(request):
-    new_room = request.data
-    new_room["id"] = max(room["id"] for room in rooms) + 1 if rooms else 1
-    rooms.append(new_room)
-    return Response(new_room, status=status.HTTP_201_CREATED)
+    serializer = RoomSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
 def room_update(request, pk):
