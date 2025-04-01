@@ -5,6 +5,7 @@ import UserDetail from "./pages/UserDetail.tsx";
 import UserForm from './pages/UserForm.tsx';
 import Rooms from './pages/Rooms.tsx';
 import RoomDetail from './pages/RoomDetail.tsx';
+import RoomForm from './pages/RoomForm.tsx';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/users/create" element={<UserForm />} />
         <Route path="/rooms" element={<Rooms />} />
         <Route path="/rooms/:id" element={<RoomDetail />} />
+        <Route path="/rooms/create" element={<RoomForm />} />
         </Routes>
     </Router>
   );
