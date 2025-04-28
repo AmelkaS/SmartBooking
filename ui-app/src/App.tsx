@@ -7,11 +7,15 @@ import UserForm from './pages/UserForm.tsx';
 import Rooms from './pages/Rooms.tsx';
 import RoomDetail from './pages/RoomDetail.tsx';
 import RoomForm from './pages/RoomForm.tsx';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
 
 export default function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/" element={<Home />} />
         <Route path="/users" element={<Users />} />  
         <Route path="/users/:id" element={<UserDetail />} />
