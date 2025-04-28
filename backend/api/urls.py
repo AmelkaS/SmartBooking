@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (
     user_list, user_detail, user_create, user_update, user_delete,
-    room_list, room_detail, room_create, room_update, room_delete
+    room_list, room_detail, room_create, room_update, room_delete,
+    
 )
 
 urlpatterns = [
@@ -18,4 +19,10 @@ urlpatterns = [
     path('rooms/create/', room_create, name='room_create'),  
     path('rooms/<int:pk>/update/', room_update, name='room_update'),  
     path('rooms/<int:pk>/delete/', room_delete, name='room_delete'), 
+
+    # Endpointy logowania i rejestracji
+    path('register/', RegisterView.as_view(), name='register'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 ]

@@ -5,6 +5,21 @@ from .models import User, Room
 from .serializers import UserSerializer, RoomSerializer
 
 
+@api_view(['POST'])
+def register_user(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if not email or not password:
+        return Response({'error': 'Email and password are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(email=email).exists():
+        return Response({'error': 'User with this email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.create_user(email=email, username=email, password=password)
+    serializer = UserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 @api_view(['GET'])
 def user_list(request):
     users = User.objects.all()
