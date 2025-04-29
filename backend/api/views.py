@@ -5,6 +5,21 @@ from rest_framework.permissions import IsAuthenticated
 from .models import User, Room
 from .serializers import UserSerializer, RoomSerializer, RegisterSerializer
 from .permissions import IsAdmin
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data['user'] = {
+            'id': self.user.id,
+            'email': self.user.email,
+            'role': self.user.role,  # zakładamy, że masz to pole w modelu SystemUser
+        }
+        return data
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 @api_view(['POST'])  # Rejestracja dostępna publicznie

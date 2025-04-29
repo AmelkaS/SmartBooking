@@ -1,5 +1,6 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Users from "./pages/Users.tsx";
 import UserDetail from "./pages/UserDetail.tsx";
@@ -13,6 +14,7 @@ import { RegisterPage } from './pages/RegisterPage.tsx'
 export default function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

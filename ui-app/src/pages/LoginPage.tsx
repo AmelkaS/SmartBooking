@@ -16,12 +16,12 @@ export function LoginPage() {
       });
 
       // Odbieramy tokeny
-      const { access, refresh } = response.data;
+      const { access, refresh, user } = response.data;
 
       // Zapisujemy w localStorage
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
-
+      localStorage.setItem("role", user.role);
       setMessage('Zalogowano pomyślnie!');
       
       // Opcjonalnie chwilka oczekiwania
