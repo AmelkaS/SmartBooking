@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .models import User, Room
 from .serializers import UserSerializer, RoomSerializer, RegisterSerializer
+from .permissions import IsAdmin
 
 
 @api_view(['POST'])  # Rejestracja dostępna publicznie
@@ -38,7 +39,7 @@ def user_detail(request, pk):
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdmin])
 def user_create(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
@@ -47,7 +48,7 @@ def user_create(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdmin])
 def user_update(request, pk):
     try:
         user = User.objects.get(pk=pk)
@@ -61,7 +62,7 @@ def user_update(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdmin])
 def user_delete(request, pk):
     try:
         user = User.objects.get(pk=pk)
@@ -90,7 +91,7 @@ def room_detail(request, pk):
     return Response(serializer.data)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdmin])
 def room_create(request):
     serializer = RoomSerializer(data=request.data)
     if serializer.is_valid():
@@ -99,7 +100,7 @@ def room_create(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdmin])
 def room_update(request, pk):
     try:
         room = Room.objects.get(pk=pk)
@@ -113,7 +114,7 @@ def room_update(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdmin])
 def room_delete(request, pk):
     try:
         room = Room.objects.get(pk=pk)

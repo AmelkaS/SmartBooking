@@ -3,6 +3,7 @@ import {useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function UserForm() {
+  const [error, setError] = useState("");
   const [form, setForm] = useState(
     { first_name: "", 
         last_name: "", 
@@ -14,10 +15,36 @@ export default function UserForm() {
 
   const navigate = useNavigate();
  
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await axios.post("http://localhost:8000/api/users/create/", form);
-    alert("Użytkownik dodany!");
+    setError("");
+
+    try {
+      const token = localStorage.getItem("access_token");
+
+      if (!token) {
+        setError("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+        return;
+      }
+
+      await axios.post("http://localhost:8000/api/users/create/", form, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      alert("Użytkownik dodany!");
+      navigate(-1); // wróć do poprzedniej strony
+
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        setError("Nieautoryzowany dostęp. Zaloguj się ponownie.");
+      } else if (err.response?.status === 403) {
+        setError("Brak uprawnień do dodawania użytkowników.");
+      } else {
+        setError("Wystąpił błąd przy dodawaniu użytkownika.");
+      }
+    }
   };
 
   return (
