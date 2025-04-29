@@ -1,48 +1,67 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 export function LoginPage() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
 
-    if (response.ok) {
-      alert('Zalogowano pomyślnie!');
-      // Możesz przekierować np. do strony głównej
-    } else {
-      alert('Błąd logowania.');
+    try {
+      const response = await axios.post('http://localhost:8000/api/token/', {
+        username: email,
+        password,
+      });
+
+      // Odbieramy tokeny
+      const { access, refresh } = response.data;
+
+      // Zapisujemy w localStorage
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
+
+      setMessage('Zalogowano pomyślnie!');
+      
+      // Opcjonalnie chwilka oczekiwania
+      setTimeout(() => {
+        window.location.href = '/';  // po zalogowaniu np. na stronę główną
+      }, 1000);
+
+    } catch (error: any) {
+      console.error('Błąd logowania:', error);
+      if (error.response && error.response.status === 401) {
+        setMessage('Nieprawidłowy login lub hasło.');
+      } else {
+        setMessage('Błąd logowania. Spróbuj ponownie.');
+      }
     }
   };
 
   return (
-    <div>
-      <h1>Logowanie</h1>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        /><br />
-        <input
-          type="password"
-          placeholder="Hasło"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        /><br />
-        <button type="submit">Zaloguj się</button>
-      </form>
-      <p>Nie masz konta? <button onClick={() => navigate('/register')}>Zarejestruj się</button></p>
-    </div>
+    <form onSubmit={handleLogin}>
+      <label htmlFor="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+
+      <label htmlFor="password">Hasło:</label>
+      <input
+        type="password"
+        id="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+
+      {message && <p className="message">{message}</p>}
+
+      <button type="submit">Zaloguj się</button>
+    </form>
   );
 }

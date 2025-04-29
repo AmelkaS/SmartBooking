@@ -7,8 +7,8 @@ import UserForm from './pages/UserForm.tsx';
 import Rooms from './pages/Rooms.tsx';
 import RoomDetail from './pages/RoomDetail.tsx';
 import RoomForm from './pages/RoomForm.tsx';
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
+import { LoginPage } from './pages/LoginPage.tsx';
+import { RegisterPage } from './pages/RegisterPage.tsx'
 
 export default function App() {
   return (

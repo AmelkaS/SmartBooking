@@ -2,9 +2,11 @@ from django.urls import path
 from .views import (
     user_list, user_detail, user_create, user_update, user_delete,
     room_list, room_detail, room_create, room_update, room_delete,
-    register_user, login_user
-
-
+    register_user,
+)
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
 )
 
 urlpatterns = [
@@ -24,6 +26,7 @@ urlpatterns = [
 
     # Endpointy logowania i rejestracji
     path('register/', register_user, name='register_user'),
-    path('login/', login_user, name='login_user'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]

@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, Group, Permission
+
 
 class User(models.Model):
     first_name = models.CharField(max_length=50)
@@ -38,3 +40,26 @@ class RoomEquipment(models.Model):
 
     class Meta:
         unique_together = ('room', 'equipment')
+
+class SystemUser(AbstractUser):
+    """
+    Systemowy użytkownik odpowiedzialny za logowanie i rejestrację.
+    Dziedziczy z AbstractUser, co oznacza, że zawiera wszystkie pola i funkcjonalności standardowego użytkownika Django
+    """
+    email = models.EmailField(unique=True)
+    # username = models.CharField(max_length=150, unique=True)
+
+    groups = models.ManyToManyField(
+        Group,
+        related_name="custom_user_set", 
+        blank=True,
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name="custom_user_permissions_set",  
+        blank=True,
+    )
+
+    def __str__(self):
+        # Zwraca czytelną reprezentację użytkownika
+        return f"{self.username}"
