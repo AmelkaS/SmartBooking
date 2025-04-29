@@ -55,6 +55,7 @@ export default function UserForm() {
         </button>
       </div>
       <h3 style={{ textAlign: "center" }}>Dodaj użytkownika</h3>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <form 
         onSubmit={handleSubmit} 
         style={{ 
