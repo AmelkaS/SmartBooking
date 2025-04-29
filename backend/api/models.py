@@ -46,8 +46,13 @@ class SystemUser(AbstractUser):
     Systemowy użytkownik odpowiedzialny za logowanie i rejestrację.
     Dziedziczy z AbstractUser, co oznacza, że zawiera wszystkie pola i funkcjonalności standardowego użytkownika Django
     """
+    ROLE_CHOICES = (
+        ('ADMIN', 'Admin'),
+        ('USER', 'User'),
+    )
+
     email = models.EmailField(unique=True)
-    # username = models.CharField(max_length=150, unique=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='USER')
 
     groups = models.ManyToManyField(
         Group,
