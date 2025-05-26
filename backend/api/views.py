@@ -7,6 +7,17 @@ from .serializers import UserSerializer, RoomSerializer, RegisterSerializer
 from .permissions import IsAdmin
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from rest_framework.views import APIView
+
+class HelloView(APIView):
+    @swagger_auto_schema(
+        operation_description="Zwraca powitanie",
+        responses={200: "OK"}
+    )
+    def get(self, request):
+        return Response({"message": "Hello from Swagger!"})
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -14,28 +25,32 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['user'] = {
             'id': self.user.id,
             'email': self.user.email,
-            'role': self.user.role,  # zakładamy, że masz to pole w modelu SystemUser
+            'role': self.user.role,
         }
         return data
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
-
-@api_view(['POST'])  # Rejestracja dostępna publicznie
+@swagger_auto_schema(
+    method='post',
+    request_body=RegisterSerializer,
+    responses={201: RegisterSerializer, 400: "Bad Request"},
+    operation_description="Rejestracja nowego użytkownika systemowego"
+)
+@api_view(['POST'])
 def register_user(request):
     serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED
-        )
-    return Response(
-        serializer.errors,
-        status=status.HTTP_400_BAD_REQUEST
-    )
-    
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+    method='get',
+    responses={200: UserSerializer(many=True)},
+    operation_description="Lista wszystkich użytkowników"
+)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_list(request):
@@ -43,6 +58,11 @@ def user_list(request):
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
+@swagger_auto_schema(
+    method='get',
+    responses={200: UserSerializer, 404: "User not found"},
+    operation_description="Szczegóły użytkownika na podstawie ID"
+)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_detail(request, pk):
@@ -53,6 +73,12 @@ def user_detail(request, pk):
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
+@swagger_auto_schema(
+    method='post',
+    request_body=UserSerializer,
+    responses={201: UserSerializer, 400: "Bad Request"},
+    operation_description="Dodanie nowego użytkownika (tylko dla administratora)"
+)
 @api_view(['POST'])
 @permission_classes([IsAdmin])
 def user_create(request):
@@ -62,6 +88,12 @@ def user_create(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(
+    method='put',
+    request_body=UserSerializer,
+    responses={200: UserSerializer, 404: "User not found", 400: "Bad Request"},
+    operation_description="Aktualizacja użytkownika (tylko dla administratora)"
+)
 @api_view(['PUT'])
 @permission_classes([IsAdmin])
 def user_update(request, pk):
@@ -76,6 +108,11 @@ def user_update(request, pk):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(
+    method='delete',
+    responses={204: "Deleted", 404: "User not found"},
+    operation_description="Usunięcie użytkownika (tylko dla administratora)"
+)
 @api_view(['DELETE'])
 @permission_classes([IsAdmin])
 def user_delete(request, pk):
@@ -85,9 +122,14 @@ def user_delete(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
 # ROOMS
 
+@swagger_auto_schema(
+    method='get',
+    responses={200: RoomSerializer(many=True)},
+    operation_description="Lista wszystkich sal"
+)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def room_list(request):
@@ -95,6 +137,11 @@ def room_list(request):
     serializer = RoomSerializer(rooms, many=True)
     return Response(serializer.data)
 
+@swagger_auto_schema(
+    method='get',
+    responses={200: RoomSerializer, 404: "Room not found"},
+    operation_description="Szczegóły sali na podstawie ID"
+)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def room_detail(request, pk):
@@ -105,6 +152,12 @@ def room_detail(request, pk):
     serializer = RoomSerializer(room)
     return Response(serializer.data)
 
+@swagger_auto_schema(
+    method='post',
+    request_body=RoomSerializer,
+    responses={201: RoomSerializer, 400: "Bad Request"},
+    operation_description="Dodanie nowej sali (tylko dla administratora)"
+)
 @api_view(['POST'])
 @permission_classes([IsAdmin])
 def room_create(request):
@@ -114,6 +167,12 @@ def room_create(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(
+    method='put',
+    request_body=RoomSerializer,
+    responses={200: RoomSerializer, 404: "Room not found", 400: "Bad Request"},
+    operation_description="Aktualizacja sali (tylko dla administratora)"
+)
 @api_view(['PUT'])
 @permission_classes([IsAdmin])
 def room_update(request, pk):
@@ -121,13 +180,18 @@ def room_update(request, pk):
         room = Room.objects.get(pk=pk)
     except Room.DoesNotExist:
         return Response({"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
     serializer = RoomSerializer(room, data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(
+    method='delete',
+    responses={204: "Deleted", 404: "Room not found"},
+    operation_description="Usunięcie sali (tylko dla administratora)"
+)
 @api_view(['DELETE'])
 @permission_classes([IsAdmin])
 def room_delete(request, pk):
