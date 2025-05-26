@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     user_list, user_detail, user_create, user_update, user_delete,
     room_list, room_detail, room_create, room_update, room_delete,
-    register_user, CustomTokenObtainPairView
+    register_user, CustomTokenObtainPairView, queue_test
 
 )
 from rest_framework_simplejwt.views import (
@@ -30,5 +30,8 @@ urlpatterns = [
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path("token/", CustomTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    path('queue/send/', queue_test, name='queue_test'),
+
 
 ]

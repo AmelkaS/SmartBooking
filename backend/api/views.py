@@ -10,6 +10,13 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.views import APIView
+from messaging.publisher import send_message
+
+@api_view(['POST'])
+def queue_test(request):
+    msg = request.data.get("message", "Hello from Django!")
+    send_message(msg)
+    return Response({"status": "queued", "message": msg})
 
 class HelloView(APIView):
     @swagger_auto_schema(
