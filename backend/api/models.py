@@ -10,36 +10,51 @@ class User(models.Model):
     def __str__(self):
         return f'{self.first_name} {self.last_name} - {self.role}'
 
+    
+class Equipment(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class RoomEquipment(models.Model):
+    room = models.ForeignKey('Room', on_delete=models.CASCADE)
+    equipment = models.ForeignKey('Equipment', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    class Meta:
+        unique_together = ('room', 'equipment')
+
+    def __str__(self):
+        return f"{self.room.name} - {self.equipment.name} ({self.quantity})"
+    
 class Room(models.Model):
     name = models.CharField(max_length=100)
     capacity = models.IntegerField()
-    equipment = models.TextField()
+    equipment = models.ManyToManyField('Equipment', through='RoomEquipment', blank=True)
 
     def __str__(self):
         return f'{self.name} - {self.capacity} osób'
     
-class Equipment(models.Model):
-    name = models.CharField(max_length=100)
-    quantity = models.IntegerField()
-
-    def __str__(self):
-        return f"{self.name} ({self.quantity})"
-    
 class Reservation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    STATUS_CHOICES = (
+        ('PENDING', 'Oczekująca'),
+        ('APPROVED', 'Zatwierdzona'),
+        ('REJECTED', 'Odrzucona'),
+    )
+
+    user = models.ForeignKey('SystemUser', on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    student_count = models.PositiveIntegerField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
 
     def __str__(self):
         return f"{self.user} → {self.room} ({self.start_time} - {self.end_time})"
 
-class RoomEquipment(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
 
-    class Meta:
-        unique_together = ('room', 'equipment')
+
 
 class SystemUser(AbstractUser):
     """
