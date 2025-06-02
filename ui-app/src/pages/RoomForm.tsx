@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Alert
+} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function RoomForm() {
   const [form, setForm] = useState({
@@ -52,45 +60,64 @@ export default function RoomForm() {
   };
 
   return (
-    <>
-      <div style={{ textAlign: "left", marginBottom: "1rem" }}>
-        <button onClick={() => navigate(-1)} style={{ padding: "0.5rem 1rem" }}>
-          ← Wróć
-        </button>
-      </div>
-      <h3 style={{ textAlign: "center" }}>Dodaj nową salę</h3>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          maxWidth: "400px",
-          margin: "0 auto",
+    <Box sx={{ maxWidth: 500, mx: "auto", mt: 8 }}>
+      <Button
+        variant="outlined"
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate(-1)}
+        sx={{
+          mb: 3,
+          borderColor: "#013571",
+          color: "#013571",
+          "&:hover": { borderColor: "#013571", backgroundColor: "#f0f8ff" },
         }}
       >
-        <input
+        Wróć
+      </Button>
+
+      <Typography variant="h4" fontWeight="bold" textAlign="center" gutterBottom>
+        Dodaj nową salę
+      </Typography>
+
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <TextField
+          label="Nazwa sali"
           name="name"
-          placeholder="Nazwa sali"
+          value={form.name}
           onChange={handleChange}
-          style={{ marginTop: "0.5rem", padding: "0.5rem" }}
+          required
         />
-        <input
+        <TextField
+          label="Pojemność"
           name="capacity"
           type="number"
-          placeholder="Pojemność"
+          value={form.capacity}
           onChange={handleChange}
-          style={{ marginTop: "0.5rem", padding: "0.5rem" }}
+          required
         />
-        <input
+        <TextField
+          label="Wyposażenie"
           name="equipment"
-          placeholder="Wyposażenie"
+          value={form.equipment}
           onChange={handleChange}
-          style={{ marginTop: "0.5rem", padding: "0.5rem" }}
+          required
         />
-        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
-        <button type="submit">Dodaj salę</button>
-      </form>
-    </>
+
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{
+            mt: 1,
+            backgroundColor: "#013571",
+            fontWeight: "bold",
+            "&:hover": { backgroundColor: "#012f60" },
+          }}
+        >
+          Dodaj salę
+        </Button>
+      </Box>
+    </Box>
   );
 }
