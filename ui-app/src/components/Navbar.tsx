@@ -35,8 +35,8 @@ export default function Navbar() {
         {token && <Link to="/users" style={{ color: "#fff", textDecoration: "none" }}>Użytkownicy</Link>}
         {token && role === "ADMIN" && (
           <>
-            <Link to="/rooms/create" style={{ color: "#fff", textDecoration: "none" }}>➕ Dodaj salę</Link>
-            <Link to="/users/create" style={{ color: "#fff", textDecoration: "none" }}>➕ Dodaj użytkownika</Link>
+            <Link to="/rooms/create" style={{ color: "#fff", textDecoration: "none" }}>Dodaj salę</Link>
+            <Link to="/users/create" style={{ color: "#fff", textDecoration: "none" }}>Dodaj użytkownika</Link>
           </>
         )}
       </div>
