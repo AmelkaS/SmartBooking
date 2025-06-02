@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  Box,
+  Typography,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  Alert
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function Users() {
   const [users, setUsers] = useState<any[]>([]);
@@ -24,7 +36,6 @@ export default function Users() {
       });
       setUsers(res.data);
     } catch (err: any) {
-      console.error("Błąd pobierania użytkowników:", err);
       if (err.response?.status === 401) {
         setError("Nieautoryzowany dostęp. Zaloguj się.");
       } else {
@@ -48,9 +59,8 @@ export default function Users() {
           Authorization: `Bearer ${token}`,
         },
       });
-      fetchUsers(); // odświeżanie listy
+      fetchUsers();
     } catch (err: any) {
-      console.error("Błąd usuwania użytkownika:", err);
       if (err.response?.status === 403) {
         setError("Nie masz uprawnień do usunięcia użytkownika.");
       } else {
@@ -64,30 +74,69 @@ export default function Users() {
   }, []);
 
   return (
-    <div>
-      <div style={{ textAlign: "left", marginBottom: "1rem" }}>
-        <button onClick={() => navigate(-1)} style={{ padding: "0.5rem 1rem" }}>
-          ← Wróć
-        </button>
-      </div>
-      <h2>Lista użytkowników</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
+    <Box sx={{ maxWidth: 600, mx: "auto", mt: 8 }}>
+      <Button
+        variant="outlined"
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate(-1)}
+        sx={{
+          mb: 3,
+          borderColor: "#013571",
+          color: "#013571",
+          "&:hover": { borderColor: "#013571", backgroundColor: "#f0f8ff" },
+        }}
+      >
+        Wróć
+      </Button>
+
+      <Typography variant="h4" fontWeight="bold" gutterBottom>
+        Lista użytkowników
+      </Typography>
+
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+      <List>
         {users.map((user: any) => (
-          <li key={user.id}>
-            <a href={`/users/${user.id}`}>
-              {user.first_name} {user.last_name} - {user.role}
-            </a>
-            <button
-              onClick={() => deleteUser(user.id)}
-              style={{ marginLeft: "1rem" }}
-            >
-              Usuń
-            </button>
-          </li>
+          <ListItem
+            key={user.id}
+            secondaryAction={
+              <IconButton
+                edge="end"
+                onClick={() => deleteUser(user.id)}
+                aria-label="delete"
+              >
+                <DeleteIcon />
+              </IconButton>
+            }
+            disablePadding
+          >
+            <ListItemText
+              primary={
+                <a
+                  href={`/users/${user.id}`}
+                  style={{ textDecoration: "none", color: "#013571" }}
+                >
+                  {user.first_name} {user.last_name} – {user.role}
+                </a>
+              }
+              sx={{ ml: 2 }}
+            />
+          </ListItem>
         ))}
-      </ul>
-      <button onClick={fetchUsers}>Odśwież listę</button>
-    </div>
+      </List>
+
+      <Button
+        variant="contained"
+        onClick={fetchUsers}
+        sx={{
+          mt: 3,
+          backgroundColor: "#013571",
+          fontWeight: "bold",
+          "&:hover": { backgroundColor: "#012f60" },
+        }}
+      >
+        Odśwież listę
+      </Button>
+    </Box>
   );
 }
