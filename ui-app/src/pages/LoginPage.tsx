@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+  Link,
+  Alert
+} from '@mui/material';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -15,23 +24,19 @@ export function LoginPage() {
         password,
       });
 
-      // Odbieramy tokeny
       const { access, refresh, user } = response.data;
 
-      // Zapisujemy w localStorage
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
       localStorage.setItem("role", user.role);
       setMessage('Zalogowano pomyślnie!');
       
-      // Opcjonalnie chwilka oczekiwania
       setTimeout(() => {
-        window.location.href = '/';  // po zalogowaniu np. na stronę główną
+        window.location.href = '/';
       }, 1000);
 
     } catch (error: any) {
-      console.error('Błąd logowania:', error);
-      if (error.response && error.response.status === 401) {
+      if (error.response?.status === 401) {
         setMessage('Nieprawidłowy login lub hasło.');
       } else {
         setMessage('Błąd logowania. Spróbuj ponownie.');
@@ -40,28 +45,58 @@ export function LoginPage() {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <label htmlFor="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
+    <Container maxWidth="xs" sx={{ display: 'flex', minHeight: '100vh', alignItems: 'center' }}>
+      <Box component="form" onSubmit={handleLogin} width="100%">
+        <Typography variant="h4" fontWeight="bold" gutterBottom>
+          Zaloguj się
+        </Typography>
 
-      <label htmlFor="password">Hasło:</label>
-      <input
-        type="password"
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
+        <Typography variant="body2" sx={{ mb: 2 }}>
+          Nie masz konta?{' '}
+          <Link href="/register" underline="hover">Zarejestruj się tutaj.</Link>
+        </Typography>
 
-      {message && <p className="message">{message}</p>}
+        <TextField
+          label="Login"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-      <button type="submit">Zaloguj się</button>
-    </form>
+        <TextField
+          label="Hasło"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
+          Zapomniałeś hasła?{' '}
+          <Link href="/reset" underline="hover">Przypomnij mi.</Link>
+        </Typography>
+
+        {message && (
+          <Alert severity={message.includes('Zalogowano') ? 'success' : 'error'} sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ backgroundColor: '#0b2c68', textTransform: 'none', fontWeight: 'bold' }}
+        >
+          Potwierdź
+        </Button>
+      </Box>
+    </Container>
   );
 }
