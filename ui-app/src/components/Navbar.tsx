@@ -42,6 +42,13 @@ export default function Navbar() {
             <Link to="/users/create" style={{ color: "#fff", textDecoration: "none" }}>Dodaj użytkownika</Link>
           </>
         )}
+        {token && (
+          <>
+          <Link to="/reservations/create" style={{ color: "#fff", textDecoration: "none" }}>Rezerwuj salę</Link>
+          <Link to="/reservations" style={{ color: "#fff", textDecoration: "none" }}>Rezerwacje</Link>
+          </>
+        )}
+                
       </div>
 
       <div style={{ display: "flex", gap: "1rem" }}>

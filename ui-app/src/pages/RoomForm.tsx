@@ -97,14 +97,6 @@ export default function RoomForm() {
           onChange={handleChange}
           required
         />
-        <TextField
-          label="Wyposażenie"
-          name="equipment"
-          value={form.equipment}
-          onChange={handleChange}
-          required
-        />
-
         <Button
           type="submit"
           variant="contained"

@@ -10,6 +10,8 @@ import RoomDetail from './pages/RoomDetail.tsx';
 import RoomForm from './pages/RoomForm.tsx';
 import { LoginPage } from './pages/LoginPage.tsx';
 import { RegisterPage } from './pages/RegisterPage.tsx'
+import ReservationList from './pages/ReservationList.tsx'
+import ReservationForm from './pages/ReservationForm.tsx'
 
 export default function App() {
   return (
@@ -25,6 +27,8 @@ export default function App() {
         <Route path="/rooms" element={<Rooms />} />
         <Route path="/rooms/:id" element={<RoomDetail />} />
         <Route path="/rooms/create" element={<RoomForm />} />
+        <Route path="/reservations/create" element={<ReservationForm />} />
+        <Route path="/reservations" element={<ReservationList />} />
         </Routes>
     </Router>
   );

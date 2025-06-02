@@ -74,9 +74,6 @@ export default function RoomDetail() {
           <Typography variant="h6" color="text.secondary">
             Pojemność: {room.capacity}
           </Typography>
-          <Typography variant="h6" color="text.secondary">
-            Wyposażenie: {room.equipment}
-          </Typography>
         </>
       )}
     </Box>
