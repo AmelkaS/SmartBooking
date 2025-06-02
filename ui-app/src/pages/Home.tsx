@@ -1,32 +1,93 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography
+} from "@mui/material";
 
 export default function Home() {
-  const role = localStorage.getItem("role"); // 'ADMIN' lub 'USER'
+  const role = localStorage.getItem("role");
 
   return (
-    <div style={{ textAlign: "center", padding: "2rem" }}>
-      <h1>Witamy w aplikacji SmartBooking</h1>
-      <p>Wybierz jedną z opcji:</p>
+    <Container
+      maxWidth="md"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+      }}
+    >
+      <Box>
+        <Typography variant="h3" fontWeight="bold" gutterBottom>
+          Witamy w aplikacji SmartBooking
+        </Typography>
+        <Typography variant="h6" color="text.secondary" gutterBottom>
+          Wybierz jedną z opcji:
+        </Typography>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          marginTop: "2rem",
-        }}
-      >
-        <Link to="/users">Lista użytkowników</Link>
-        <Link to="/rooms">Lista sal</Link>
-        {role === "ADMIN" && (
-          <>
-            <Link to="/users/create">Dodaj użytkownika</Link>
-            <Link to="/rooms/create">Dodaj salę</Link>
-          </>
-        )}
-      </div>
-    </div>
+        <Stack spacing={2} mt={4} alignItems="center">
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/users"
+            sx={{ width: 250, backgroundColor: "#013571", '&:hover': { backgroundColor: "#012f60" } }}
+          >
+            Lista użytkowników
+          </Button>
+
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/rooms"
+            sx={{ width: 250, backgroundColor: "#013571", '&:hover': { backgroundColor: "#012f60" } }}
+          >
+            Lista sal
+          </Button>
+
+          {role === "ADMIN" && (
+            <>
+              <Button
+                variant="outlined"
+                component={RouterLink}
+                to="/users/create"
+                sx={{
+                  width: 250,
+                  color: "#013571",
+                  borderColor: "#013571",
+                  '&:hover': {
+                    backgroundColor: "#f0f8ff",
+                    borderColor: "#013571",
+                  },
+                }}
+              >
+                Dodaj użytkownika
+              </Button>
+
+              <Button
+                variant="outlined"
+                component={RouterLink}
+                to="/rooms/create"
+                sx={{
+                  width: 250,
+                  color: "#013571",
+                  borderColor: "#013571",
+                  '&:hover': {
+                    backgroundColor: "#f0f8ff",
+                    borderColor: "#013571",
+                  },
+                }}
+              >
+                Dodaj salę
+              </Button>
+            </>
+          )}
+        </Stack>
+      </Box>
+    </Container>
   );
 }
-

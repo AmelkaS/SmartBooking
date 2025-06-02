@@ -21,6 +21,7 @@ export default function Navbar() {
       top: 0,
       left: 0,
       right: 0,
+      backgroundColor: "#013571",
       color: "#ffffff",
       borderBottom: "1px solid #333",
       padding: "1rem 2rem",
@@ -29,7 +30,9 @@ export default function Navbar() {
       alignItems: "center",
       zIndex: 1000,
     }}>
+      <span style={{ fontWeight: "bold", fontSize: "1.2rem" }}>SmartBooking</span>
       <div style={{ display: "flex", gap: "1rem" }}>
+        
         <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>Strona główna</Link>
         {token && <Link to="/rooms" style={{ color: "#fff", textDecoration: "none" }}>Sale</Link>}
         {token && <Link to="/users" style={{ color: "#fff", textDecoration: "none" }}>Użytkownicy</Link>}
