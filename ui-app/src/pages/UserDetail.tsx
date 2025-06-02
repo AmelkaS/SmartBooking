@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  Box,
+  Button,
+  Typography,
+  Alert
+} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function UserDetail() {
   const { id } = useParams();
@@ -40,18 +47,36 @@ export default function UserDetail() {
     fetchUser();
   }, [id]);
 
-  if (error) return <div style={{ color: "red" }}>{error}</div>;
-  if (!user) return <div>Ładowanie...</div>;
-
   return (
-    <div>
-      <div style={{ textAlign: "left", marginBottom: "1rem" }}>
-        <button onClick={() => navigate(-1)} style={{ padding: "0.5rem 1rem" }}>
-          ← Wróć
-        </button>
-      </div>
-      <h2>{user.first_name} {user.last_name}</h2>
-      <p>Rola: {user.role}</p>
-    </div>
+    <Box sx={{ maxWidth: 500, mx: "auto", mt: 8 }}>
+      <Button
+        variant="outlined"
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate(-1)}
+        sx={{
+          mb: 3,
+          borderColor: "#013571",
+          color: "#013571",
+          "&:hover": { borderColor: "#013571", backgroundColor: "#f0f8ff" },
+        }}
+      >
+        Wróć
+      </Button>
+
+      {error ? (
+        <Alert severity="error">{error}</Alert>
+      ) : !user ? (
+        <Typography>Ładowanie...</Typography>
+      ) : (
+        <>
+          <Typography variant="h4" fontWeight="bold" gutterBottom>
+            {user.first_name} {user.last_name}
+          </Typography>
+          <Typography variant="h6" color="text.secondary">
+            Rola: {user.role}
+          </Typography>
+        </>
+      )}
+    </Box>
   );
 }
