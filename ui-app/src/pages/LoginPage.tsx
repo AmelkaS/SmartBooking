@@ -77,10 +77,10 @@ export function LoginPage() {
           required
         />
 
-        <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
+        {/* <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
           Zapomniałeś hasła?{' '}
           <Link href="/reset" underline="hover">Przypomnij mi.</Link>
-        </Typography>
+        </Typography> */}
 
         {message && (
           <Alert severity={message.includes('Zalogowano') ? 'success' : 'error'} sx={{ mb: 2 }}>

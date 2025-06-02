@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+  Link,
+  Alert
+} from '@mui/material';
 
 export function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -21,32 +30,27 @@ export function RegisterPage() {
     }
 
     try {
-      // Krok 1: rejestracja
       await axios.post('http://localhost:8000/api/register/', {
         email,
         password,
       });
 
-      // Krok 2: automatyczne logowanie
       const loginResponse = await axios.post('http://localhost:8000/api/token/', {
-        username: email,   // JWT używa 'username', nawet jeśli to email
-        password: password,
+        username: email,
+        password,
       });
 
       const { access, refresh } = loginResponse.data;
 
-      // Krok 3: zapisanie tokenów
       localStorage.setItem('access_token', access);
       localStorage.setItem('refresh_token', refresh);
 
-      // Krok 4: przekierowanie
       setMessage('Zarejestrowano i zalogowano pomyślnie!');
       setTimeout(() => {
-        window.location.href = '/'; // np /dashboard
+        window.location.href = '/';
       }, 1000);
 
     } catch (error: any) {
-      console.error('Błąd rejestracji/logowania:', error);
       if (error.response?.data?.email) {
         setMessage('Użytkownik z takim adresem email już istnieje.');
       } else if (error.response?.status === 401) {
@@ -58,39 +62,65 @@ export function RegisterPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
+    <Container maxWidth="xs" sx={{ display: 'flex', minHeight: '100vh', alignItems: 'center' }}>
+      <Box component="form" onSubmit={handleSubmit} width="100%">
+        <Typography variant="h4" fontWeight="bold" gutterBottom>
+          Zarejestruj się
+        </Typography>
 
-      <label htmlFor="password">Hasło:</label>
-      <input
-        type="password"
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        minLength={8}
-        required
-      />
+        <Typography variant="body2" sx={{ mb: 2 }}>
+          Masz już konto?{' '}
+          <Link href="/login" underline="hover">Zaloguj się tutaj.</Link>
+        </Typography>
 
-      <label htmlFor="confirmPassword">Potwierdź hasło:</label>
-      <input
-        type="password"
-        id="confirmPassword"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        minLength={8}
-        required
-      />
+        <TextField
+          label="Email"
+          type="email"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-      {message && <p>{message}</p>}
+        <TextField
+          label="Hasło"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-      <button type="submit">Zarejestruj się</button>
-    </form>
+        <TextField
+          label="Potwierdź hasło"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+
+        {message && (
+          <Alert severity={message.includes('Zarejestrowano') ? 'success' : 'error'} sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ backgroundColor: '#0b2c68', textTransform: 'none', fontWeight: 'bold' }}
+        >
+          Zarejestruj się
+        </Button>
+      </Box>
+    </Container>
   );
 }
