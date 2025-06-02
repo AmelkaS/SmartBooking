@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     user_list, user_detail, user_create, user_update, user_delete,
     room_list, room_detail, room_create, room_update, room_delete,
-    register_user, CustomTokenObtainPairView, queue_test
+    register_user, CustomTokenObtainPairView, queue_test, 
+    reservation_list, reservation_create, reservation_update_status,
 
 )
 from rest_framework_simplejwt.views import (
@@ -32,6 +33,11 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     path('queue/send/', queue_test, name='queue_test'),
+
+    # Endpointy rezerwacji
+    path('api/reservations/', reservation_list, name='reservation-list'),
+    path('api/reservations/create/', reservation_create, name='reservation-create'),
+    path('api/reservations/<int:pk>/status/', reservation_update_status, name='reservation-status-update'),
 
 
 ]
