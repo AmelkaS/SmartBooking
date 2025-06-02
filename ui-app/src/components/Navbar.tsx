@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 export default function Navbar() {
   const navigate = useNavigate();
   const token = localStorage.getItem("access_token");
-  const role = localStorage.getItem("role"); // Upewnij się, że ją zapisujesz po logowaniu
+  const role = localStorage.getItem("role");
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
@@ -13,7 +13,7 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  console.log("Rola użytkownika:", role); // ✅ debug
+  console.log("Rola użytkownika:", role);
 
   return (
     <nav style={{
@@ -30,13 +30,13 @@ export default function Navbar() {
       zIndex: 1000,
     }}>
       <div style={{ display: "flex", gap: "1rem" }}>
-        <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>🏠 Strona główna</Link>
-        {token && <Link to="/rooms" style={{ color: "#fff", textDecoration: "none" }}>📦 Sale</Link>}
-        {token && <Link to="/users" style={{ color: "#fff", textDecoration: "none" }}>🧑‍🤝‍🧑 Użytkownicy</Link>}
+        <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>Strona główna</Link>
+        {token && <Link to="/rooms" style={{ color: "#fff", textDecoration: "none" }}>Sale</Link>}
+        {token && <Link to="/users" style={{ color: "#fff", textDecoration: "none" }}>Użytkownicy</Link>}
         {token && role === "ADMIN" && (
           <>
             <Link to="/rooms/create" style={{ color: "#fff", textDecoration: "none" }}>➕ Dodaj salę</Link>
-            <Link to="/users/create" style={{ color: "#fff", textDecoration: "none" }}>👤 Dodaj użytkownika</Link>
+            <Link to="/users/create" style={{ color: "#fff", textDecoration: "none" }}>➕ Dodaj użytkownika</Link>
           </>
         )}
       </div>
@@ -44,8 +44,8 @@ export default function Navbar() {
       <div style={{ display: "flex", gap: "1rem" }}>
         {!token ? (
           <>
-            <Link to="/login" style={{ color: "#fff", textDecoration: "none" }}>🔐 Zaloguj</Link>
-            <Link to="/register" style={{ color: "#fff", textDecoration: "none" }}>📝 Rejestracja</Link>
+            <Link to="/login" style={{ color: "#fff", textDecoration: "none" }}>Zaloguj</Link>
+            <Link to="/register" style={{ color: "#fff", textDecoration: "none" }}>Rejestracja</Link>
           </>
         ) : (
           <button
@@ -57,7 +57,7 @@ export default function Navbar() {
               cursor: "pointer",
             }}
           >
-            🚪 Wyloguj
+            Wyloguj
           </button>
         )}
       </div>
