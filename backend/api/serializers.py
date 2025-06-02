@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Room, SystemUser
+from .models import User, Room, SystemUser, Reservation
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,3 +38,12 @@ class SystemUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemUser
         fields = ['id', 'email', 'role', 'date_joined', 'is_active']  
+
+class ReservationSerializer(serializers.ModelSerializer):
+    user_email = serializers.EmailField(source='user.email', read_only=True)
+    room_name = serializers.CharField(source='room.name', read_only=True)
+
+    class Meta:
+        model = Reservation
+        fields = ['id', 'user', 'user_email', 'room', 'room_name', 'start_time', 'end_time', 'student_count', 'status']
+        read_only_fields = ['status']  # status ustawiany domyślnie jako 'PENDING'
