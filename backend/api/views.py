@@ -2,8 +2,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .models import User, Room
-from .serializers import UserSerializer, RoomSerializer, RegisterSerializer
+from .models import User, Room, Reservation
+from .serializers import UserSerializer, RoomSerializer, RegisterSerializer, ReservationSerializer
 from .permissions import IsAdmin
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -208,3 +208,68 @@ def room_delete(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except Room.DoesNotExist:
         return Response({"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+# RESERVATIONS
+
+# Lista rezerwacji (dla ADMIN lub właściciela)
+@swagger_auto_schema(
+    method='get',
+    responses={200: ReservationSerializer(many=True)},
+    operation_description="Lista wszystkich rezerwacji (dla admina) lub użytkownika"
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def reservation_list(request):
+    if request.user.role == 'ADMIN':
+        reservations = Reservation.objects.all()
+    else:
+        reservations = Reservation.objects.filter(user=request.user)
+    serializer = ReservationSerializer(reservations, many=True)
+    return Response(serializer.data)
+
+# Tworzenie rezerwacji (domyślnie status = PENDING)
+@swagger_auto_schema(
+    method='post',
+    request_body=ReservationSerializer,
+    responses={201: ReservationSerializer, 400: "Bad Request"},
+    operation_description="Utworzenie nowej rezerwacji sali (tylko zalogowani użytkownicy)"
+)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def reservation_create(request):
+    data = request.data.copy()
+    data['user'] = request.user.id  # wymuszamy przypisanie użytkownika
+    serializer = ReservationSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Zmiana statusu rezerwacji (tylko dla ADMINA)
+@swagger_auto_schema(
+    method='patch',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'status': openapi.Schema(type=openapi.TYPE_STRING, enum=['APPROVED', 'REJECTED']),
+        }
+    ),
+    responses={200: "OK", 404: "Not found"},
+    operation_description="Zatwierdzanie lub odrzucanie rezerwacji (ADMIN)"
+)
+@api_view(['PATCH'])
+@permission_classes([IsAdmin])
+def reservation_update_status(request, pk):
+    try:
+        reservation = Reservation.objects.get(pk=pk)
+    except Reservation.DoesNotExist:
+        return Response({"error": "Reservation not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    status_value = request.data.get('status')
+    if status_value not in ['APPROVED', 'REJECTED']:
+        return Response({"error": "Nieprawidłowy status"}, status=status.HTTP_400_BAD_REQUEST)
+
+    reservation.status = status_value
+    reservation.save()
+    return Response({"status": "updated"})
+
