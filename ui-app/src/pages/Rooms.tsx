@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  Box,
+  Typography,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  Alert
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface Room {
   id: number;
@@ -65,27 +77,69 @@ export default function Rooms() {
   }, []);
 
   return (
-    <div>
-      <div style={{ textAlign: "left", marginBottom: "1rem" }}>
-        <button onClick={() => navigate(-1)} style={{ padding: "0.5rem 1rem" }}>
-          ← Wróć
-        </button>
-      </div>
-      <h2>Lista sal</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
+    <Box sx={{ maxWidth: 600, mx: "auto", mt: 8 }}>
+      <Button
+        variant="outlined"
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate(-1)}
+        sx={{
+          mb: 3,
+          borderColor: "#013571",
+          color: "#013571",
+          "&:hover": { borderColor: "#013571", backgroundColor: "#f0f8ff" },
+        }}
+      >
+        Wróć
+      </Button>
+
+      <Typography variant="h4" fontWeight="bold" gutterBottom>
+        Lista sal lekcyjnych 
+      </Typography>
+
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+      <List>
         {rooms.map((room) => (
-          <li key={room.id}>
-            <a href={`/rooms/${room.id}`}>
-              {room.name} – {room.capacity} miejsc, {room.equipment}
-            </a>
-            <button onClick={() => deleteRoom(room.id)} style={{ marginLeft: "1rem" }}>
-              Usuń
-            </button>
-          </li>
+          <ListItem
+            key={room.id}
+            secondaryAction={
+              <IconButton
+                edge="end"
+                onClick={() => deleteRoom(room.id)}
+                aria-label="delete"
+              >
+                <DeleteIcon />
+              </IconButton>
+            }
+            disablePadding
+          >
+            <ListItemText
+              primary={
+                <a
+                  href={`/rooms/${room.id}`}
+                  style={{ textDecoration: "none", color: "#013571" }}
+                >
+                  {room.name} – {room.capacity} miejsc, {room.equipment}
+                </a>
+              }
+              sx={{ ml: 2, pr: 4 }}
+            />
+          </ListItem>
         ))}
-      </ul>
-      <button onClick={fetchRooms}>Odśwież listę</button>
-    </div>
+      </List>
+
+      <Button
+        variant="contained"
+        onClick={fetchRooms}
+        sx={{
+          mt: 3,
+          backgroundColor: "#013571",
+          fontWeight: "bold",
+          "&:hover": { backgroundColor: "#012f60" },
+        }}
+      >
+        Odśwież listę
+      </Button>
+    </Box>
   );
 }

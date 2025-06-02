@@ -119,7 +119,7 @@ export default function Users() {
                   {user.first_name} {user.last_name} – {user.role}
                 </a>
               }
-              sx={{ ml: 2 }}
+              sx={{ ml: 2, pr: 4 }}
             />
           </ListItem>
         ))}
