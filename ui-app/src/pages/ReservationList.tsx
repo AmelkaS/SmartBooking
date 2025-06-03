@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import axiosInstance from '../utils/axiosInstance';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 
 export default function ReservationList() {
   const [reservations, setReservations] = useState([]);
@@ -69,6 +71,7 @@ export default function ReservationList() {
     );
     setAnchorEls((prev) => ({ ...prev, [key]: null }));
   };
+  const navigate = useNavigate();
 
   const columns = [
     { key: "user_email", label: "Użytkownik" },
@@ -81,6 +84,19 @@ export default function ReservationList() {
 
   return (
     <Box sx={{ mt: 5 }}>
+      <Button
+      variant="outlined"
+      startIcon={<ArrowBackIcon />}
+      onClick={() => navigate(-1)}
+      sx={{
+        mb: 3,
+        borderColor: "#013571",
+        color: "#013571",
+        "&:hover": { borderColor: "#013571", backgroundColor: "#f0f8ff" },
+      }}
+    >
+      Wróć
+    </Button>
       <Typography variant="h5" mb={2}>Lista rezerwacji</Typography>
       <Table>
         <TableHead>
