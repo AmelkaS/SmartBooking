@@ -61,6 +61,9 @@ class ReservationSerializer(serializers.ModelSerializer):
         if start < timezone.now():
             raise serializers.ValidationError("Nie można tworzyć rezerwacji w przeszłości.")
         
+        if count > room.capacity:
+            raise serializers.ValidationError(f"Liczba uczestników ({count}) przekracza pojemność sali ({room.capacity}).")
+        
         return data
 
 
