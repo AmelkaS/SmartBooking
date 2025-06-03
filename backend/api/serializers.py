@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User, Room, SystemUser, Reservation
+from django.utils import timezone
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,6 +57,9 @@ class ReservationSerializer(serializers.ModelSerializer):
 
         if end <= start:
             raise serializers.ValidationError("Czas zakończenia musi być późniejszy niż czas rozpoczęcia.")
+        
+        if start < timezone.now():
+            raise serializers.ValidationError("Nie można tworzyć rezerwacji w przeszłości.")
         
         return data
 
