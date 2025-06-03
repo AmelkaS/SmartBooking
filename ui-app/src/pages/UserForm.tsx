@@ -35,7 +35,7 @@ export default function UserForm() {
         return;
       }
 
-      await axiosInstance.post("http://localhost:8000/api/users/create/", form, {
+      await axiosInstance.post("http://localhost:8000/api/v1/users/create/", form, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

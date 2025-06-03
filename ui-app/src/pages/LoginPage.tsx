@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import axios from 'axios';
 import axiosInstance from '../utils/axiosInstance';
 
 import {
@@ -21,7 +20,7 @@ export function LoginPage() {
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.post('http://localhost:8000/api/token/', {
+      const response = await axiosInstance.post('http://localhost:8000/api/v1/token/', {
         username: email,
         password,
       });
@@ -78,11 +77,6 @@ export function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-        {/* <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
-          Zapomniałeś hasła?{' '}
-          <Link href="/reset" underline="hover">Przypomnij mi.</Link>
-        </Typography> */}
 
         {message && (
           <Alert severity={message.includes('Zalogowano') ? 'success' : 'error'} sx={{ mb: 2 }}>

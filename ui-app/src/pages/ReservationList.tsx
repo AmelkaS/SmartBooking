@@ -25,7 +25,7 @@ export default function ReservationList() {
 
   const fetchReservations = async () => {
     const token = localStorage.getItem("access_token");
-    const response = await axiosInstance.get("http://localhost:8000/api/reservations/", {
+    const response = await axiosInstance.get("http://localhost:8000/api/v1/reservations/", {
       headers: { Authorization: `Bearer ${token}` },
     });
     setReservations(response.data);
@@ -39,12 +39,23 @@ export default function ReservationList() {
   const handleApprove = async (id: number) => {
     const token = localStorage.getItem("access_token");
     await axiosInstance.patch(
-      `http://localhost:8000/api/reservations/${id}/status/`,
+      `http://localhost:8000/api/v1/reservations/${id}/status/`,
       { status: "APPROVED" },
       { headers: { Authorization: `Bearer ${token}` } }
     );
     fetchReservations();
   };
+
+  const handleReject = async (id: number) => {
+  const token = localStorage.getItem("access_token");
+  await axiosInstance.patch(
+    `http://localhost:8000/api/v1/reservations/${id}/status/`,
+    { status: "REJECTED" },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  fetchReservations();
+};
+
 
   const openMenu = (e: any, key: string) => {
     setAnchorEls((prev) => ({ ...prev, [key]: e.currentTarget }));
@@ -134,11 +145,17 @@ export default function ReservationList() {
               <TableCell>{r.status}</TableCell>
               <TableCell>
                 {r.status === "PENDING" && localStorage.getItem("role") === "ADMIN" && (
-                  <Button onClick={() => handleApprove(r.id)} variant="outlined" size="small">
-                    Zatwierdź
-                  </Button>
+                  <>
+                    <Button onClick={() => handleApprove(r.id)} variant="outlined" size="small" sx={{ mr: 1 }}>
+                      Zatwierdź
+                    </Button>
+                    <Button onClick={() => handleReject(r.id)} variant="outlined" size="small" color="error">
+                      Odrzuć
+                    </Button>
+                  </>
                 )}
               </TableCell>
+
             </TableRow>
           ))}
         </TableBody>

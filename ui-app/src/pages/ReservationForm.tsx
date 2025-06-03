@@ -27,7 +27,7 @@ export default function ReservationForm() {
     const fetchRooms = async () => {
       try {
         const token = localStorage.getItem("access_token");
-        const res = await axiosInstance.get("http://localhost:8000/api/rooms/", {
+        const res = await axiosInstance.get("http://localhost:8000/api/v1/rooms/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setRooms(res.data);
@@ -39,7 +39,7 @@ export default function ReservationForm() {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("access_token");
-        const res = await axiosInstance.get("http://localhost:8000/api/user/me/", {
+        const res = await axiosInstance.get("http://localhost:8000/api/v1/user/me/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserRole(res.data.role);
@@ -67,7 +67,7 @@ export default function ReservationForm() {
         status: userRole === "ADMIN" ? "APPROVED" : "PENDING",
       };
 
-      await axiosInstance.post("http://localhost:8000/api/reservations/create/", payload, {
+      await axiosInstance.post("http://localhost:8000/api/v1/reservations/create/", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

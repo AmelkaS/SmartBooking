@@ -35,7 +35,7 @@ export default function Rooms() {
         return;
       }
 
-      const res = await axiosInstance.get("http://localhost:8000/api/rooms/", {
+      const res = await axiosInstance.get("http://localhost:8000/api/v1/rooms/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,7 +56,7 @@ export default function Rooms() {
         return;
       }
 
-      await axiosInstance.delete(`http://localhost:8000/api/rooms/${id}/delete/`, {
+      await axiosInstance.delete(`http://localhost:8000/api/v1/rooms/${id}/delete/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

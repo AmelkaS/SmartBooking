@@ -31,7 +31,7 @@ export default function RoomDetail() {
           return;
         }
 
-        const res = await axiosInstance.get(`http://localhost:8000/api/rooms/${id}/`, {
+        const res = await axiosInstance.get(`http://localhost:8000/api/v1/rooms/${id}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

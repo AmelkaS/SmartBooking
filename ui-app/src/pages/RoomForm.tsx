@@ -35,7 +35,7 @@ export default function RoomForm() {
       }
 
       await axiosInstance.post(
-        "http://localhost:8000/api/rooms/create/",
+        "http://localhost:8000/api/v1/rooms/create/",
         {
           ...form,
           capacity: Number(form.capacity),

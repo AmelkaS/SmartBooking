@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Room, SystemUser, Reservation
+from .models import User, Room, SystemUser, Reservation, Equipment,
 from django.utils import timezone
 
 class UserSerializer(serializers.ModelSerializer):
@@ -7,10 +7,20 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'first_name', 'last_name', 'role']
 
+# class RoomSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Room
+#         fields = ['id', 'name', 'capacity', 'equipment' ]
+
 class RoomSerializer(serializers.ModelSerializer):
+    equipment = serializers.PrimaryKeyRelatedField(
+        queryset=Equipment.objects.all(), many=True, required=False
+    )
+
     class Meta:
         model = Room
-        fields = ['id', 'name', 'capacity', 'equipment' ]
+        fields = ['id', 'name', 'capacity', 'equipment']
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     """

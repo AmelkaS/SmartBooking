@@ -30,12 +30,12 @@ export function RegisterPage() {
     }
 
     try {
-      await axiosInstance.post('http://localhost:8000/api/register/', {
+      await axiosInstance.post('http://localhost:8000/api/v1/register/', {
         email,
         password,
       });
 
-      const loginResponse = await axiosInstance.post('http://localhost:8000/api/token/', {
+      const loginResponse = await axiosInstance.post('http://localhost:8000/api/v1/token/', {
         username: email,
         password,
       });

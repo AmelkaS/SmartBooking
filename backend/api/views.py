@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .models import User, Room, Reservation, Equipment 
+from .models import User, Room, Reservation, Equipment, RoomEquipment 
 from .serializers import UserSerializer, RoomSerializer, RegisterSerializer, ReservationSerializer, SystemUserSerializer
 from .permissions import IsAdmin
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -165,14 +165,20 @@ def room_detail(request, pk):
     responses={201: RoomSerializer, 400: "Bad Request"},
     operation_description="Dodanie nowej sali (tylko dla administratora)"
 )
+
 @api_view(['POST'])
-@permission_classes([IsAdmin])
+@permission_classes([IsAuthenticated, IsAdmin])
 def room_create(request):
     serializer = RoomSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        room = serializer.save()
+        equipment_ids = request.data.get('equipment', [])
+        if equipment_ids:
+            for eq_id in equipment_ids:
+                RoomEquipment.objects.create(room=room, equipment_id=eq_id)
+        return Response(RoomSerializer(room).data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @swagger_auto_schema(
     method='put',

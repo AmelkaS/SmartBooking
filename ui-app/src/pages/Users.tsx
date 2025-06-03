@@ -29,7 +29,7 @@ export default function Users() {
         return;
       }
 
-      const res = await axiosInstance.get("http://localhost:8000/api/users/", {
+      const res = await axiosInstance.get("http://localhost:8000/api/v1/users/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -54,7 +54,7 @@ export default function Users() {
         return;
       }
 
-      await axiosInstance.delete(`http://localhost:8000/api/users/${id}/delete/`, {
+      await axiosInstance.delete(`http://localhost:8000/api/v1/users/${id}/delete/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

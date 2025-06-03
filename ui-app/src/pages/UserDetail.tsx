@@ -25,7 +25,7 @@ export default function UserDetail() {
           return;
         }
 
-        const res = await axiosInstance.get(`http://localhost:8000/api/users/${id}/`, {
+        const res = await axiosInstance.get(`http://localhost:8000/api/v1/users/${id}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
