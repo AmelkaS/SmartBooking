@@ -49,6 +49,24 @@ export default function Home() {
             Lista sal
           </Button>
 
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/reservations"
+            sx={{ width: 250, backgroundColor: "#013571", '&:hover': { backgroundColor: "#012f60" } }}
+          >
+            Rezerwacje
+          </Button>
+
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/reservations/create"
+            sx={{ width: 250, backgroundColor: "#013571", '&:hover': { backgroundColor: "#012f60" } }}
+          >
+            Zarezerwuj salę
+          </Button>
+
           {role === "ADMIN" && (
             <>
               <Button

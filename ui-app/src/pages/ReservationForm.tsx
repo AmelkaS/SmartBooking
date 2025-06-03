@@ -9,6 +9,7 @@ import {
   Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function ReservationForm() {
   const [rooms, setRooms] = useState([]);
@@ -79,7 +80,21 @@ export default function ReservationForm() {
   };
 
   return (
+    
     <Box sx={{ maxWidth: 500, mx: "auto", mt: 4 }}>
+      <Button
+      variant="outlined"
+      startIcon={<ArrowBackIcon />}
+      onClick={() => navigate(-1)}
+      sx={{
+        mb: 3,
+        borderColor: "#013571",
+        color: "#013571",
+        "&:hover": { borderColor: "#013571", backgroundColor: "#f0f8ff" },
+      }}
+    >
+      Wróć
+    </Button>
       <Typography variant="h5" gutterBottom>
         Formularz rezerwacji sali
       </Typography>
