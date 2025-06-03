@@ -64,6 +64,19 @@ class ReservationSerializer(serializers.ModelSerializer):
         if count > room.capacity:
             raise serializers.ValidationError(f"Liczba uczestników ({count}) przekracza pojemność sali ({room.capacity}).")
         
+        overlapping = Reservation.objects.filter(
+            room=room,
+            status__in=["PENDING", "APPROVED"],
+            start_time__lt=end,
+            end_time__gt=start,
+        )
+        if self.instance:
+            # jeśli aktualizujemy istniejącą rezerwację – pomijamy ją samą
+            overlapping = overlapping.exclude(id=self.instance.id)
+
+        if overlapping.exists():
+            raise serializers.ValidationError("W tym czasie sala jest już zarezerwowana.")
+        
         return data
 
 
