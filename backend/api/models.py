@@ -24,6 +24,7 @@ class RoomEquipment(models.Model):
 
     class Meta:
         unique_together = ('room', 'equipment')
+        db_table = 'api_room_equipment'
 
     def __str__(self):
         return f"{self.room.name} - {self.equipment.name} ({self.quantity})"

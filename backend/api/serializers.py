@@ -47,3 +47,16 @@ class ReservationSerializer(serializers.ModelSerializer):
         model = Reservation
         fields = ['id', 'user', 'user_email', 'room', 'room_name', 'start_time', 'end_time', 'student_count', 'status']
         read_only_fields = ['status']  # status ustawiany domyślnie jako 'PENDING'
+    
+    def validate(self, data):
+        start = data['start_time']
+        end = data['end_time']
+        room = data['room']
+        count = data['student_count']
+
+        if end <= start:
+            raise serializers.ValidationError("Czas zakończenia musi być późniejszy niż czas rozpoczęcia.")
+        
+        return data
+
+

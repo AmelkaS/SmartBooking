@@ -2,8 +2,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .models import User, Room, Reservation
-from .serializers import UserSerializer, RoomSerializer, RegisterSerializer, ReservationSerializer
+from .models import User, Room, Reservation, Equipment 
+from .serializers import UserSerializer, RoomSerializer, RegisterSerializer, ReservationSerializer, SystemUserSerializer
 from .permissions import IsAdmin
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -208,7 +208,13 @@ def room_delete(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except Room.DoesNotExist:
         return Response({"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def equipment_list(request):
+    equipment = Equipment.objects.all()
+    return Response([{'id': eq.id, 'name': eq.name} for eq in equipment])
+
 # RESERVATIONS
 
 # Lista rezerwacji (dla ADMIN lub właściciela)
@@ -238,7 +244,13 @@ def reservation_list(request):
 @permission_classes([IsAuthenticated])
 def reservation_create(request):
     data = request.data.copy()
-    data['user'] = request.user.id  # wymuszamy przypisanie użytkownika
+    data['user'] = request.user.id
+
+    if request.user.role == 'ADMIN':
+        data['status'] = 'APPROVED'  # admin może od razu zatwierdzić
+    else:
+        data['status'] = 'PENDING'  # user musi czekać na akceptację
+
     serializer = ReservationSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
@@ -272,4 +284,10 @@ def reservation_update_status(request, pk):
     reservation.status = status_value
     reservation.save()
     return Response({"status": "updated"})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_current_user(request):
+    serializer = SystemUserSerializer(request.user)
+    return Response(serializer.data)
 

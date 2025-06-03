@@ -4,6 +4,7 @@ from .views import (
     room_list, room_detail, room_create, room_update, room_delete,
     register_user, CustomTokenObtainPairView, queue_test, 
     reservation_list, reservation_create, reservation_update_status,
+    equipment_list, get_current_user,
 
 )
 from rest_framework_simplejwt.views import (
@@ -35,9 +36,13 @@ urlpatterns = [
     path('queue/send/', queue_test, name='queue_test'),
 
     # Endpointy rezerwacji
-    path('api/reservations/', reservation_list, name='reservation-list'),
-    path('api/reservations/create/', reservation_create, name='reservation-create'),
-    path('api/reservations/<int:pk>/status/', reservation_update_status, name='reservation-status-update'),
+    path('reservations/', reservation_list, name='reservation-list'),
+    path('reservations/create/', reservation_create, name='reservation-create'),
+    path('reservations/<int:pk>/status/', reservation_update_status, name='reservation-status-update'),
+
+    path('equipment/', equipment_list, name='equipment-list'),
+
+    path('user/me/', get_current_user, name='get-current-user'),
 
 
 ]
