@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../utils/axiosInstance';
 import {
   Box,
   Typography,
@@ -29,7 +29,7 @@ export default function Users() {
         return;
       }
 
-      const res = await axios.get("http://localhost:8000/api/users/", {
+      const res = await axiosInstance.get("http://localhost:8000/api/users/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -54,7 +54,7 @@ export default function Users() {
         return;
       }
 
-      await axios.delete(`http://localhost:8000/api/users/${id}/delete/`, {
+      await axiosInstance.delete(`http://localhost:8000/api/users/${id}/delete/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

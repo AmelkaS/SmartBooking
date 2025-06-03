@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../utils/axiosInstance';
 import {
   Box,
   Button,
@@ -31,7 +31,7 @@ export default function RoomDetail() {
           return;
         }
 
-        const res = await axios.get(`http://localhost:8000/api/rooms/${id}/`, {
+        const res = await axiosInstance.get(`http://localhost:8000/api/rooms/${id}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

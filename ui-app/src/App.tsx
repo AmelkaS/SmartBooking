@@ -1,3 +1,4 @@
+import PrivateRoute from "./components/PrivateRoute";
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -18,18 +19,84 @@ export default function App() {
     <Router>
       <Navbar />
       <Routes>
+        {/* Publiczne */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/users" element={<Users />} />  
-        <Route path="/users/:id" element={<UserDetail />} />
-        <Route path="/users/create" element={<UserForm />} />
-        <Route path="/rooms" element={<Rooms />} />
-        <Route path="/rooms/:id" element={<RoomDetail />} />
-        <Route path="/rooms/create" element={<RoomForm />} />
-        <Route path="/reservations/create" element={<ReservationForm />} />
-        <Route path="/reservations" element={<ReservationList />} />
-        </Routes>
+
+        {/* Prywatne */}
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <PrivateRoute>
+              <Users />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/users/:id"
+          element={
+            <PrivateRoute>
+              <UserDetail />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/users/create"
+          element={
+            <PrivateRoute>
+              <UserForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/rooms"
+          element={
+            <PrivateRoute>
+              <Rooms />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/rooms/:id"
+          element={
+            <PrivateRoute>
+              <RoomDetail />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/rooms/create"
+          element={
+            <PrivateRoute>
+              <RoomForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/reservations"
+          element={
+            <PrivateRoute>
+              <ReservationList />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/reservations/create"
+          element={
+            <PrivateRoute>
+              <ReservationForm />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
     </Router>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from '../utils/axiosInstance';
 import {
   Box,
   Button,
@@ -26,7 +26,7 @@ export default function ReservationForm() {
     const fetchRooms = async () => {
       try {
         const token = localStorage.getItem("access_token");
-        const res = await axios.get("http://localhost:8000/api/rooms/", {
+        const res = await axiosInstance.get("http://localhost:8000/api/rooms/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setRooms(res.data);
@@ -38,7 +38,7 @@ export default function ReservationForm() {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("access_token");
-        const res = await axios.get("http://localhost:8000/api/user/me/", {
+        const res = await axiosInstance.get("http://localhost:8000/api/user/me/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserRole(res.data.role);
@@ -66,7 +66,7 @@ export default function ReservationForm() {
         status: userRole === "ADMIN" ? "APPROVED" : "PENDING",
       };
 
-      await axios.post("http://localhost:8000/api/reservations/create/", payload, {
+      await axiosInstance.post("http://localhost:8000/api/reservations/create/", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -139,8 +139,9 @@ export default function ReservationForm() {
           required
         />
 
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-          Zarezerwuj
+        <Button type="submit" variant="contained" fullWidth sx={{ backgroundColor: '#0b2c68', textTransform: 'none', fontWeight: 'bold' }}
+        >
+          ZAREZERWUJ
         </Button>
       </form>
     </Box>

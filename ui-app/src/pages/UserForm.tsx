@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../utils/axiosInstance';
 import {
   Box,
   Button,
@@ -35,7 +35,7 @@ export default function UserForm() {
         return;
       }
 
-      await axios.post("http://localhost:8000/api/users/create/", form, {
+      await axiosInstance.post("http://localhost:8000/api/users/create/", form, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

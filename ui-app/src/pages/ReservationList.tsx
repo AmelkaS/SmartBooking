@@ -13,7 +13,7 @@ import {
   IconButton
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import axios from "axios";
+import axiosInstance from '../utils/axiosInstance';
 
 export default function ReservationList() {
   const [reservations, setReservations] = useState([]);
@@ -23,7 +23,7 @@ export default function ReservationList() {
 
   const fetchReservations = async () => {
     const token = localStorage.getItem("access_token");
-    const response = await axios.get("http://localhost:8000/api/reservations/", {
+    const response = await axiosInstance.get("http://localhost:8000/api/reservations/", {
       headers: { Authorization: `Bearer ${token}` },
     });
     setReservations(response.data);
@@ -36,7 +36,7 @@ export default function ReservationList() {
 
   const handleApprove = async (id: number) => {
     const token = localStorage.getItem("access_token");
-    await axios.patch(
+    await axiosInstance.patch(
       `http://localhost:8000/api/reservations/${id}/status/`,
       { status: "APPROVED" },
       { headers: { Authorization: `Bearer ${token}` } }

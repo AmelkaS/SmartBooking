@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 import {
   Box,
   Button,
@@ -30,12 +30,12 @@ export function RegisterPage() {
     }
 
     try {
-      await axios.post('http://localhost:8000/api/register/', {
+      await axiosInstance.post('http://localhost:8000/api/register/', {
         email,
         password,
       });
 
-      const loginResponse = await axios.post('http://localhost:8000/api/token/', {
+      const loginResponse = await axiosInstance.post('http://localhost:8000/api/token/', {
         username: email,
         password,
       });

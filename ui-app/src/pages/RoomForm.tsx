@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../utils/axiosInstance';
 import {
   Box,
   Button,
@@ -34,7 +34,7 @@ export default function RoomForm() {
         return;
       }
 
-      await axios.post(
+      await axiosInstance.post(
         "http://localhost:8000/api/rooms/create/",
         {
           ...form,
